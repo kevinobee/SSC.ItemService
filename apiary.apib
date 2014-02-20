@@ -1,0 +1,393 @@
+FORMAT: 1A
+HOST: http://xyz.com
+
+# Item Service API
+Item Service API allows developers to interact with Sitecore Items over HTTP.
+
+
+## Authentication [/auth/login]
+
+### Login [POST]
+Authenticate user to set .ASPXAUTH cookie. 
+
++ Request (application/json)
+
+        { 
+            "domain": "sitecore", 
+            "username": "admin", 
+            "password": "b" 
+        }
+
++ Response 200
+
++ Response 403
+    
+    
+## Authentication [/auth/logout]
+
+### Logout [POST]
+Logout of Sitecore and remove the .ASPXAUTH cookie. 
+
++ Response 200
++ Response 403
+
+    
+## Item Read by ID [/item/{id}?database&language&version&includeStandardTemplateFields&includeMetadata&fields]
+Operates on a single Sitecore Item
+
++ Parameters
+    + id (required, guid, `110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9`) ... `id` of the Sitecore item to perform action with.
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+    + version = `latest version` (optional, string, `1`) ... version of the item to access
+    + includeStandardTemplateFields = `false` (optional, bool)
+    + includeMetadata = `false` (optional, bool)
+    + fields = `all fields` (optional, string, `ItemId,ItemName,TemplateName`)
+
+### Retrieve an Item [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            Accept: application/json
+
+    + Body
+
+            { 
+                "ItemID": "110d559f-dea5-42ea-9c1c-8a5df7e70ef9", 
+                "ItemName": "Home", 
+                "ItemPath": "/sitecore/content/Home", 
+                "ParentID": "0de95ae4-41ab-4d01-9eb0-67441b7c2450", 
+                "TemplateID": "76036f5e-cbce-46d1-af0a-4143f9b557aa", 
+                "TemplateName": "Sample Item", 
+                "CloneSource": null, 
+                "ItemLanguage": "en", 
+                "ItemVersion": "1", 
+                "Title": "Sitecore", 
+                "Text": "\r\n\t\t<p>Welcome to Sitecore</p>\r\n" 
+            }
+
++ Response 400
++ Response 403
++ Response 404
+
+## Item Read by Content Path [/item/?path={path}database&language&version&includeStandardTemplateFields&includeMetadata&fields]
+Operates on a single Sitecore Item
+
++ Parameters
+    + path (required, string, `/sitecore/content/Home`) ... path to the item in the Sitecore content tree.
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+    + version = `latest version` (optional, string, `1`) ... version of the item to access
+    + includeStandardTemplateFields = `false` (optional, bool)
+    + includeMetadata = `false` (optional, bool)
+    + fields = `all fields` (optional, string, `ItemId,ItemName,TemplateName`)
+
+### Retrieve an Item [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            Accept: application/json
+
+    + Body
+
+            { 
+                "ItemID": "110d559f-dea5-42ea-9c1c-8a5df7e70ef9", 
+                "ItemName": "Home", 
+                "ItemPath": "/sitecore/content/Home", 
+                "ParentID": "0de95ae4-41ab-4d01-9eb0-67441b7c2450", 
+                "TemplateID": "76036f5e-cbce-46d1-af0a-4143f9b557aa", 
+                "TemplateName": "Sample Item", 
+                "CloneSource": null, 
+                "ItemLanguage": "en", 
+                "ItemVersion": "1", 
+                "Title": "Sitecore", 
+                "Text": "\r\n\t\t<p>Welcome to Sitecore</p>\r\n" 
+            }
+
++ Response 400
++ Response 403
++ Response 404
+
+## Item Relation Operations [/item/{id}/children?database&language&version&includeStandardTemplateFields&includeMetadata&fields]
+Operates on a single Sitecore Item
+
++ Parameters
+    + id (required, guid, `110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9`) ... `id` of the Sitecore item to perform action with.
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+    + version = `latest version` (optional, string, `1`) ... version of the item to access
+    + includeStandardTemplateFields = `false` (optional, bool)
+    + includeMetadata = `false` (optional, bool)
+    + fields = `all fields` (optional, string, `ItemId,ItemName,TemplateName`)
+    
+### Retrieve an Item's children [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            Accept: application/json
+
+    + Body
+
+            [ 
+                { 
+                    "ItemID": "b974fd33-c72e-4bae-a2da-b94fe44f3d6b", 
+                    "ItemName": "Test", 
+                    "ItemPath": "/sitecore/content/Home/Test", 
+                    "ParentID": "110d559f-dea5-42ea-9c1c-8a5df7e70ef9", 
+                    "TemplateID": "a87a00b1-e6db-45ab-8b54-636fec3b5523", 
+                    "TemplateName": "Folder", 
+                    "CloneSource": null, 
+                    "ItemLanguage": "en", 
+                    "ItemVersion": "1" 
+                } 
+            ]
+
++ Response 400
++ Response 403
++ Response 404
+
+## Create an Item [/item/{path}?database&language]
+Operates on a single Sitecore Item
+
++ Parameters
+    + path (required, string, `sitecore/content/home`) ... Path of the parent item under which to create the new item
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+
+### Create an Item [POST]
+
++ Request (application/json)
+
+        { 
+            "ItemName": "Home", 
+            "TemplateID": "76036f5e-cbce-46d1-af0a-4143f9b557aa", 
+            "Title": "Sitecore", 
+            "Text": "\r\n\t\t<p>Welcome to Sitecore</p>\r\n" 
+        }
+
++ Response 201
+
+    + Headers
+    
+            Location: /item/0727f965-2338-43cc-bd88-5071ad3f7a12?database=master
+
++ Response 400
++ Response 403
++ Response 404
+
+## Modifying an Item [/item/{id}?database&language&version]
+Operates on a single Sitecore Item. It is possible to update field values, the item name and move the item in a single HTTP request.
+
++ Parameters
+    + id (required, guid, `110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9`) ... `id` of the Sitecore item to perform action with.
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+    + version = `latest version` (optional, string, `1`) ... version of the item to access
+
+### Edit an Item [PATCH]
++ Request (application/json)
+
+        { 
+            "ParentID": "b974fd33-c72e-4bae-a2da-b94fe44f3d6b", 
+            "ItemName":"Home Renamed", 
+            "Title":"Sitecore Modified" 
+        }
+
++ Response 204
+
++ Response 400
++ Response 403
++ Response 404
+
+## Removing Items [/item/{id}?database&language]
+Operates on a single Sitecore Item
+
++ Parameters
+    + id (required, guid, `110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9`) ... `id` of the Sitecore item to perform action with.
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+
+### Remove an Item [DELETE]
++ Response 204
+
++ Response 400
++ Response 403
++ Response 404
+
+
+## Running Sitecore Query via a Content Item [/item/{id}/query?pageSize&page&database&includeStandardTemplateFields&fields]
+Executes a query stored in a Query Definition item in the content tree.
+
++ Parameters
+    + id (required, guid, `110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9`) ... `id` of the Sitecore Query Definition item
+    + pageSize = `10` (optional, integer) ... the number of results to return in the HTTP response
+    + page = `0` (optional, integer) ... the page number of the results to show
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + includeStandardTemplateFields = `false` (optional, bool)
+    + fields = `all fields` (optional, string, `ItemId,ItemName,TemplateName`)
+    
+### Sitecore Query [GET]
++ Response 200 (application/json)
+
+    + Header
+
+            Accept: application/json
+
+    + Body
+
+            { 
+                "TotalCount": 100, 
+                "TotalPage": 50, 
+                "Links": [ 
+                    { 
+                        "Href": "http://xyz.com/api/sc/item/query?includeStandardTemplateFields=False&fields=ItemID%2CItemName&page=1&database=core&query=%2Fsitecore%2F%2F*", 
+                        "Rel": "nextPage", 
+                        "Method": "GET" 
+                    } 
+                ], 
+                "Results": [ 
+                    { 
+                        "ItemID": "31056d46-2faa-4ea2-8759-be93eae10001", 
+                        "ItemName": "client" 
+                    }, 
+                    { 
+                        "ItemID": "e9a53290-8618-43ec-9a4b-7da2af424800", 
+                        "ItemName": "Your Apps" 
+                    } 
+                ] 
+            }
+
++ Response 400
++ Response 403
+
+
+## Running Sitecore Search [/item/?term&pageSize&page&database&language&includeStandardTemplateFields&fields&sorting&facet]
+
++ Parameters
+    + term (required, string, `Home`) ... the text to search for.
+    + pageSize = `10` (optional, integer) ... the number of results to return in the HTTP response
+    + page = `0` (optional, integer) ... the page number of the results to show
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+    + language = `context language for the logged in user` (optional, string, `ja-JP`) ... language selector, accepts wildcard `all` value
+    + includeStandardTemplateFields = `false` (optional, bool)
+    + fields = `all fields` (optional, string, `ItemId,ItemName,TemplateName`)
+    + sorting (optional, string, `aTemplateName|dItemId`) ... pipe delimentedn list of values to search on. The first character of each segment specifies the sort oder, a (ascending) or d (descending) 
+    + facet (optional, string, `_templatename|condition`) ... name of facet and value to restrict search results to
+    
+### Sitecore Search [GET]
+Performs a content search for the specified term
++ Response 200 (application/json)
+
+    + Header
+
+            Accept: application/json
+
+    + Body
+
+            {
+                "Facets": [
+                    {
+                        "Name": "_templatename",
+                        "Values": [
+                            {
+                                "Name": "condition",
+                                "AggregateCount": 15,
+                                "Link": {
+                                    "Href": "http://xyz.com/api/sc/item/search?includeStandardTemplateFields=False&fields=ItemName%2CTemplateName&term=sitecore&facet=_templatename%7Ccondition",
+                                    "Rel": "_templatename|condition",
+                                    "Method": "GET"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "TotalCount": 15,
+                "TotalPage": 8,
+                "Links": [
+                    {
+                        "Href": "http://xyz.com/api/sc/item/search?includeStandardTemplateFields=False&fields=ItemName%2CTemplateName&page=1&term=sitecore&facet=_templatename%7Ccondition",
+                        "Rel": "nextPage",
+                        "Method": "GET"
+                    }
+                ],
+                "Results": [
+                    {
+                        "ItemName": "Country",
+                        "TemplateName": "Condition"
+                    },
+                    {
+                        "ItemName": "Page was Visited",
+                        "TemplateName": "Condition"
+                    }
+                ]
+            }
+
++ Response 400
++ Response 403
++ Response 503
+
+
+## Running Sitecore Search via a Content Item [/item/{id}/search?term&pageSize&page&database]
+Executes a text search constrained by a Search Definition item in the content tree.
+
++ Parameters
+    + id (required, guid, `110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9`) ... `id` of the Sitecore Search Definition item
+    + term (required, string, `Home`) ... the text to search for.
+    + pageSize = `10` (optional, integer) ... the number of results to return in the HTTP response
+    + page = `0` (optional, integer) ... the page number of the results to show
+    + database = `context database for the logged in user` (optional, string, `core`) ... database to access the item from
+
+### Sitecore Search [GET]
+Performs a content search for the specified term
++ Response 200 (application/json)
+
+    + Header
+
+            Accept: application/json
+
+    + Body
+
+            {
+                "Facets": [
+                    {
+                        "Name": "_templatename",
+                        "Values": [
+                            {
+                                "Name": "condition",
+                                "AggregateCount": 15,
+                                "Link": {
+                                    "Href": "http://xyz.com/api/sc/item/search?includeStandardTemplateFields=False&fields=ItemName%2CTemplateName&term=sitecore&facet=_templatename%7Ccondition",
+                                    "Rel": "_templatename|condition",
+                                    "Method": "GET"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "TotalCount": 15,
+                "TotalPage": 8,
+                "Links": [
+                    {
+                        "Href": "http://xyz.com/api/sc/item/search?includeStandardTemplateFields=False&fields=ItemName%2CTemplateName&page=1&term=sitecore&facet=_templatename%7Ccondition",
+                        "Rel": "nextPage",
+                        "Method": "GET"
+                    }
+                ],
+                "Results": [
+                    {
+                        "ItemName": "Country",
+                        "TemplateName": "Condition"
+                    },
+                    {
+                        "ItemName": "Page was Visited",
+                        "TemplateName": "Condition"
+                    }
+                ]
+            }
+
++ Response 400
++ Response 403
++ Response 503
