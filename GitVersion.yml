@@ -1,0 +1,19 @@
+assembly-versioning-scheme: MajorMinorPatch
+mode: ContinuousDelivery
+branches:
+  dev(elop)?(ment)?$:
+    mode: ContinuousDelivery
+    tag: r
+  master:
+    mode: ContinuousDelivery
+  features?[/-]:
+    mode: ContinuousDelivery
+    tag: r
+  support[/-]:
+    mode: ContinuousDelivery
+    tag: hotfix
+  hotfix(es)?[/-]:
+    mode: ContinuousDelivery
+    tag: hotfix
+ignore:
+  sha: []
